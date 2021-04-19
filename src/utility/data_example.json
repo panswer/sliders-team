@@ -1,0 +1,27 @@
+{
+    "firstValue": [{
+        "id": 1,
+        "name": "trust and foundations",
+        "value": 11
+    }, {
+        "id": 2,
+        "name": "individual donors",
+        "value": 34
+    }, {
+        "id": 3,
+        "name": "major donors",
+        "value": 2
+    }, {
+        "id": 4,
+        "name": "business and community groups",
+        "value": 4
+    }, {
+        "id": 5,
+        "name": "earned and other income",
+        "value": 9
+    }, {
+        "id": 6,
+        "name": "government and contracts",
+        "value": 37
+    }]
+}
