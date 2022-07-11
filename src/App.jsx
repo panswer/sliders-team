@@ -48,45 +48,47 @@ class App extends Component{
     }
     
     handleChange(e){
-        let slideChange = this.state.sladers.filter(slide=>Number(slide.id)===Number(e.target.id)).pop();
-        let otherSlide = this.state.sladers.filter(slide=>Number(slide.id)!==Number(e.target.id));
+        let indexSliderChange=this.state.sladers.findIndex(slider=>`${slider.id}`===`${e.target.id}`)
+        let sladerChange=this.state.sladers[indexSliderChange];
 
-        let now = Number(slideChange.value);
-        let left=Number(e.target.value);
+        let newValue =Number(e.target.value);
+        
+        if(newValue>97){
+            let newSladers=this.state.sladers.map(slader=>({
+                ...slader,
+                value:(`${slader.id}`===`${sladerChange.id}`)?97:0
+            }));
+            this.setState({
+                sladers:newSladers
+            });
+        }else{
+            let rest=this.plus(Number(sladerChange.value),newValue*-1);
+            console.log(rest);
+            let otherSlider=this.state.sladers.filter(slader=>slader.value>0);
+            let inZero=this.state.sladers.filter(slader=>slader.value===0);
 
-        if(left<=97){
-            let amount = now-left;
-            let rest = amount<0?otherSlide.filter(slide=>Number(slide.value)===0).length:0;
-    
-            let newValues = this.state.sladers.map(slade=>{
-                if(String(slade.id)===String(e.target.id)){
-                    console.log(`${slade.id}:${e.target.id}`);
-                    slade.value=parseFloat(e.target.value);
-                }else if(Number(slade.value)===0&&amount<0){
-                    slade.value=0;
+            let newSladers=this.state.sladers.map(slader=>{
+                if(`${slader.id}`===`${sladerChange.id}`){
+                    return {
+                        ...slader,
+                        value:newValue
+                    };
+                }else if(
+                    slader.value>0||
+                    rest>0
+                ){
+                    let newValue=this.plus(Number(slader.value),Number(rest)/Number(otherSlider.length-inZero.length-1));
+                    return {
+                        ...slader,
+                        value:newValue
+                    };
                 }else{
-                    // let value= parseFloat((parseFloat(slade.value.toFixed(2))+parseFloat((amount/(otherSlide.length-rest)).toFixed(2))).toFixed(2));
-                    let value= parseFloat(
-                        (
-                            this.plus(Number(slade.value),Number(amount/(otherSlide.length-rest)))
-                        ).toFixed(2)
-                    );
-                    
-                    slade.value=value;
+                    return slader;
                 }
-
-                return slade;
             });
 
-            while(
-                (newValues.filter(slider=>slider.value<0).length>0)&&
-                (newValues.filter(slider=>!isFinite(slider.value)).length===0)
-                ){
-                newValues=this.reOrder(newValues,e.target.id);
-            }
-
             this.setState({
-                sladers:newValues
+                sladers:newSladers
             });
         }
     }
